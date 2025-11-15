@@ -1,0 +1,1 @@
+"""EcoAgent carbon calculator package initialization."""

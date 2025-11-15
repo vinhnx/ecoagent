@@ -1,0 +1,1 @@
+"""EcoAgent progress tracker package initialization."""

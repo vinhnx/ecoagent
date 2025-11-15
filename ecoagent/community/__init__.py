@@ -1,0 +1,1 @@
+"""EcoAgent community package initialization."""
