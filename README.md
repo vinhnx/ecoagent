@@ -184,9 +184,7 @@ EcoAgent leverages Gemini's built-in Google Search grounding for real-time envir
 -   **Current data** - Recent sustainability metrics and climate information
 -   **Source citations** - Automatic links to authoritative sources
 
-For detailed information, see [Google Search Grounding Guide](docs/GOOGLE_SEARCH_GROUNDING.md).
-
-**Note:** This feature is optional. Set `ECOAGENT_ENABLE_GOOGLE_SEARCH=false` to use only Gemini's training data.
+**Note:** This feature is expirimential. Set `ECOAGENT_ENABLE_GOOGLE_SEARCH=false` to use only Gemini's training data.
 
 ## Development
 
