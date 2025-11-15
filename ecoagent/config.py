@@ -39,7 +39,7 @@ class AgentConfig(BaseModel):
     # Default settings
     default_carbon_renewable_ratio: float = Field(default=0.0, description="Default renewable energy ratio")
     default_transportation_mpg: float = Field(default=25.0, description="Default transportation MPG for calculations")
-    
+
     class Config:
         env_file = ".env"
         env_prefix = "ECOAGENT_"
@@ -49,7 +49,7 @@ def get_config() -> AgentConfig:
     """Get the configuration for the agent system."""
     api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY_FILE")
     enable_google_search = os.getenv("ECOAGENT_ENABLE_GOOGLE_SEARCH", "true").lower() == "true"
-    
+
     return AgentConfig(
         google_api_key=api_key,
         environment=os.getenv("ECOAGENT_ENVIRONMENT", "development"),

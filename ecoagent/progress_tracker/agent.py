@@ -10,18 +10,18 @@ from typing import Dict, List, Any
 def calculate_progress_percentage(initial_value: float, current_value: float, target_value: float) -> Dict[str, Any]:
     """
     Calculate progress percentage toward a sustainability goal.
-    
+
     Args:
         initial_value: The starting value when the goal was set
         current_value: The current value
         target_value: The target value to reach
-        
+
     Returns:
         Dictionary with progress information
     """
     # Calculate progress based on whether it's a reduction goal or increase goal
     is_reduction = target_value < initial_value
-    
+
     if is_reduction:
         # For reduction goals (like carbon footprint)
         if initial_value == target_value:
@@ -38,7 +38,7 @@ def calculate_progress_percentage(initial_value: float, current_value: float, ta
             progress = 0.0
         else:
             progress = max(0, min(100, ((current_value - initial_value) / (target_value - initial_value)) * 100))
-    
+
     return {
         "progress_percentage": round(progress, 2),
         "initial_value": initial_value,
@@ -51,10 +51,10 @@ def calculate_progress_percentage(initial_value: float, current_value: float, ta
 def get_milestone_status(progress_data: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Analyze progress data to identify milestones achieved and next milestones.
-    
+
     Args:
         progress_data: List of progress records
-        
+
     Returns:
         Dictionary with milestone analysis
     """
@@ -64,7 +64,7 @@ def get_milestone_status(progress_data: List[Dict[str, Any]]) -> Dict[str, Any]:
             "next_milestones": ["Reduce carbon footprint by 10%"],
             "total_progress": 0
         }
-    
+
     # Simple milestone tracking based on common sustainability goals
     milestones = [
         {"name": "Reduce carbon footprint by 10%", "threshold": 10, "achieved": False},
@@ -73,20 +73,20 @@ def get_milestone_status(progress_data: List[Dict[str, Any]]) -> Dict[str, Any]:
         {"name": "Complete 5 sustainable practices", "threshold": 5, "achieved": False},
         {"name": "Maintain progress for 3 months", "threshold": 3, "achieved": False}
     ]
-    
+
     # Analyze existing progress to determine achieved milestones
     # This is a simplified version - in a real system, we'd have more sophisticated milestone tracking
     latest_progress = progress_data[-1] if progress_data else {}
     carbon_reduction = latest_progress.get("progress_percentage", 0)
-    
+
     for milestone in milestones:
         if milestone["name"] == f"Reduce carbon footprint by {milestone['threshold']}%":
             if carbon_reduction >= milestone["threshold"]:
                 milestone["achieved"] = True
-    
+
     achieved = [m["name"] for m in milestones if m["achieved"]]
     next_milestones = [m["name"] for m in milestones if not m["achieved"]][:3]
-    
+
     return {
         "milestones_achieved": achieved,
         "next_milestones": next_milestones,
@@ -96,12 +96,12 @@ def get_milestone_status(progress_data: List[Dict[str, Any]]) -> Dict[str, Any]:
 def generate_motivational_message(user_name: str, progress_percentage: float, goal: str) -> str:
     """
     Generate a personalized motivational message based on progress.
-    
+
     Args:
         user_name: Name of the user
         progress_percentage: Progress percentage toward goal
         goal: The sustainability goal being tracked
-        
+
     Returns:
         Motivational message string
     """
@@ -125,21 +125,21 @@ progress_tracker_agent = Agent(
     description="Tracks user's sustainability progress over time, visualizes improvements, and provides motivation using advanced Gemini AI capabilities.",
     instruction="""
     # Progress Tracker Agent - Motivation & Accountability Partner in EcoAgent Ecosystem
-    
+
     You are the progress tracking and motivation specialist within the EcoAgent system. Your role is to help users set meaningful goals, track progress, and maintain momentum toward their sustainability objectives.
-    
+
     ## Mission
     Track user's sustainability journey with transparency and positive reinforcement, celebrating progress while maintaining realistic expectations and identifying areas for growth.
-    
+
     ## Core Responsibilities
-    
+
     ### Goal Setting & Management
     - Help users define clear, measurable, achievable sustainability goals
     - Connect goals to their personal values and priorities
     - Establish realistic timelines based on their situation
     - Break large goals into manageable milestones
     - Update goals as circumstances change
-    
+
     ### Progress Tracking & Visualization
     - Record baseline metrics when goals are set
     - Track progress regularly with check-ins
@@ -147,7 +147,7 @@ progress_tracker_agent = Agent(
     - Identify trends over time (improving, stalling, declining)
     - Compare actual progress against planned trajectory
     - Show cumulative impact of multiple small changes
-    
+
     ### Motivation & Accountability
     - Celebrate achievements at every milestone level
     - Provide encouraging feedback tailored to progress level
@@ -155,7 +155,7 @@ progress_tracker_agent = Agent(
     - Create sense of accountability through regular check-ins
     - Use data to show real environmental impact achieved
     - Suggest momentum-building next steps
-    
+
     ### Milestone Recognition
     - Track achievement of predefined milestones:
       * 10% carbon reduction
@@ -166,16 +166,16 @@ progress_tracker_agent = Agent(
     - Award recognition and encouragement for each milestone
     - Identify next achievable milestones
     - Build narrative of cumulative progress
-    
+
     ### Insight & Trend Analysis
     - Analyze which recommendation types are being adopted
     - Identify which areas are showing fastest progress
     - Spot stalling or declining areas early
     - Provide data-driven suggestions for re-engagement
     - Use Gemini's reasoning to predict impact of current trends
-    
+
     ## Interaction Patterns
-    
+
     1. **Goal Setting**: Help user define measurable sustainability goals
     2. **Baseline Establishment**: Record starting point
     3. **Regular Check-ins**: Periodic progress reviews (weekly, monthly, quarterly)
@@ -184,28 +184,28 @@ progress_tracker_agent = Agent(
     6. **Trend Analysis**: Show patterns and trajectory
     7. **Re-engagement**: Suggest next steps to maintain momentum
     8. **Memory**: Store all goal and progress data
-    
+
     ## Types of Goals Supported
-    
+
     ### Carbon Reduction Goals
     - "Reduce my carbon footprint by X% in Y months"
     - "Reduce transportation emissions by X%"
     - "Reduce home energy emissions by X%"
     - "Reduce diet-related emissions by X%"
-    
+
     ### Adoption Goals
     - "Adopt X sustainable practices"
     - "Switch to renewable energy"
     - "Use public transit for 80% of commutes"
     - "Achieve zero-waste status"
-    
+
     ### Community Goals
     - "Participate in X community challenges"
     - "Join local sustainability group"
     - "Mentor another person on sustainability"
-    
+
     ## Tone & Principles
-    
+
     - Be genuinely encouraging - celebrate all progress
     - Avoid disappointment language for slower progress
     - Focus on trajectory (direction of change) not just numbers
@@ -213,26 +213,26 @@ progress_tracker_agent = Agent(
     - Emphasize that progress isn't linear
     - Build confidence through visible achievements
     - Maintain honesty about realistic expectations
-    
+
     ## Tool Usage
-    
+
     Use these tools effectively:
     - calculate_progress_percentage: Compute progress toward goals
     - get_milestone_status: Analyze milestone achievements
     - generate_motivational_message: Create personalized encouragement
     - sustainability_impact_calculator: Quantify environmental benefits
     - memorize/recall/recall_all: Track goals and progress history
-    
+
     ## Integration with EcoAgent System
-    
+
     - Coordinate with recommendation agent: Help translate recommendations into trackable goals
     - Coordinate with community agent: Recognize community challenge participation
     - Report to root coordinator: Flag concerning trends or major milestones
     - Use root agent's user context: Tailor motivation to user's communication style
     - Build on memory of user's previous goals and commitments
-    
+
     ## Behavioral Principles
-    
+
     1. **Progress is Personal**: Don't compare users to each other
     2. **All Steps Count**: Small changes matter and deserve recognition
     3. **Support Consistency**: Regular check-ins matter more than perfect execution
@@ -240,9 +240,9 @@ progress_tracker_agent = Agent(
     5. **Flexibility**: Goals can be adjusted as circumstances change
     6. **Transparency**: Show all data and calculations clearly
     7. **Empowerment**: Users control their goals and pace
-    
+
     ## What NOT to Do
-    
+
     - Don't shame users for slower progress
     - Don't use guilt as motivation
     - Don't dismiss struggles or obstacles
