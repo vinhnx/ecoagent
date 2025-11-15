@@ -99,6 +99,8 @@ Discover environmental resources and practices in your area
 **EcoAgent MCP Server** - Making sustainability accessible to consumers through MCP protocol
 # EcoAgent: AI-Powered Sustainability Assistant
 
+![EcoAgent Logo](resources/ecoagent.png)
+
 EcoAgent is an advanced AI system designed to help individuals and organizations understand, track, and reduce their environmental impact. Built with Google's Agent Development Kit (ADK) and powered by Gemini AI, it provides personalized recommendations, carbon footprint calculations, progress tracking, and community engagement for sustainability.
 
 ## Features
@@ -113,6 +115,8 @@ EcoAgent is an advanced AI system designed to help individuals and organizations
 -   **Memory & State Management**: Persistent user profiles and progress tracking
 -   **Multi-Agent Architecture**: Specialized agents for different sustainability aspects
 -   **Observability**: Logging, metrics, and monitoring capabilities
+
+![demo](resources/demo.png)
 
 ## Quick Start
 
@@ -196,6 +200,7 @@ python -m ecoagent.main --host 0.0.0.0 --port 8080
 The EcoAgent system includes a powerful command-line interface for interacting with the sustainability assistant without needing a web interface.
 
 ### Installation
+
 After installing the package with `uv pip install -e .`, you can use the CLI directly:
 
 ```bash
@@ -217,15 +222,17 @@ ecoagent chat --message "How can I reduce my carbon footprint?"
 ```
 
 ### Available Commands
-- `carbon`: Calculate your carbon footprint from transportation, flights, or energy usage
-- `recommend`: Get personalized sustainability recommendations based on your profile
-- `track`: Set and track sustainability goals
-- `profile`: Manage your user profile information
-- `chat`: Interact directly with the EcoAgent in conversation
-- `serve`: Run the API service (alternative to direct API usage)
-- `info`: Show system information
+
+-   `carbon`: Calculate your carbon footprint from transportation, flights, or energy usage
+-   `recommend`: Get personalized sustainability recommendations based on your profile
+-   `track`: Set and track sustainability goals
+-   `profile`: Manage your user profile information
+-   `chat`: Interact directly with the EcoAgent in conversation
+-   `serve`: Run the API service (alternative to direct API usage)
+-   `info`: Show system information
 
 ### Advanced Usage
+
 ```bash
 # Interactive chat session
 ecoagent chat
@@ -271,10 +278,10 @@ The system includes a Google Search grounding capability:
 
 EcoAgent leverages Gemini's built-in Google Search grounding for real-time environmental information. This feature is enabled by default and includes:
 
-- **Real-time information** - Latest environmental news, policies, and research
-- **Location-based results** - Find local environmental resources and services
-- **Current data** - Recent sustainability metrics and climate information
-- **Source citations** - Automatic links to authoritative sources
+-   **Real-time information** - Latest environmental news, policies, and research
+-   **Location-based results** - Find local environmental resources and services
+-   **Current data** - Recent sustainability metrics and climate information
+-   **Source citations** - Automatic links to authoritative sources
 
 For detailed information, see [Google Search Grounding Guide](docs/GOOGLE_SEARCH_GROUNDING.md).
 
@@ -394,7 +401,7 @@ import asyncio
 async def main():
     app = get_app()
     await app.initialize()
-    
+
     response = await app.process_query(
         user_id="user123",
         session_id="session456",
