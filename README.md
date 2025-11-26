@@ -1,3 +1,4 @@
+# EcoAgent: Multi-Platform Sustainability Assistant
 
 ---
 title: EcoAgent MCP Server - Consumer Sustainability
@@ -8,15 +9,6 @@ sdk: gradio
 app_file: app.py
 pinned: false
 license: apache-2.0
-tags:
-  - mcp
-  - sustainability
-  - carbon-footprint
-  - environmental-impact
-  - building-mcp-track-consumer
-  - consumer-mcp
-  - environmental-analysis
-  - eco-friendly
 ---
 
 # 🌱 EcoAgent MCP Server - Consumer Sustainability Tools
@@ -99,127 +91,190 @@ Discover environmental resources and practices in your area
 **EcoAgent MCP Server** - Making sustainability accessible to consumers through MCP protocol
 # EcoAgent: AI-Powered Sustainability Assistant
 
-![EcoAgent Logo](resources/ecoagent.png)
+[![EcoAgent Logo](resources/ecoagent.png)](resources/ecoagent.png)
 
-EcoAgent is an advanced AI system designed to help individuals and organizations understand, track, and reduce their environmental impact. Built with Google's Agent Development Kit (ADK) and powered by Gemini AI, it provides personalized recommendations, carbon footprint calculations, progress tracking, and community engagement for sustainability.
+EcoAgent is a comprehensive sustainability assistant that provides powerful environmental tools through multiple platforms: Model Context Protocol (MCP) server and OpenAI ChatGPT integration. Built on top of the EcoAgent sustainability assistant, it allows AI agents to access carbon footprint calculations, personalized environmental recommendations, and real-time environmental data.
 
-## Features
+## MCP Track: Building MCP (Consumer Category)
 
--   **Carbon Footprint Calculator**: Accurate calculation of environmental impact from transportation, energy usage, and consumption
--   **Personalized Recommendations**: Tailored sustainability advice based on user profile and goals
--   **Progress Tracking**: Monitor and visualize environmental improvements over time
--   **Community Engagement**: Connect users with local sustainability groups and challenges
--   **Advanced AI Integration**: Powered by Google's Gemini model for sophisticated analysis
--   **Google Search Grounding**: Real-time environmental information retrieval and current news
--   **Location-Based Resources**: Access to local environmental resources and services
--   **Memory & State Management**: Persistent user profiles and progress tracking
--   **Multi-Agent Architecture**: Specialized agents for different sustainability aspects
--   **Observability**: Logging, metrics, and monitoring capabilities
+**Category**: Building MCP - Consumer Track
+**Tag**: `building-mcp-track-consumer`
 
-![demo](resources/demo.png)
+Full MCP-compliant server with 13 sustainability-focused tools for consumer use.
+
+### MCP Features
+
+-   **Full MCP Protocol Compliance**: Implements all MCP protocol requirements with proper tool discovery and execution
+-   **Standardized Tool Schemas**: Each tool follows JSON Schema specification for proper parameter validation
+-   **Carbon Footprint Tools**: Transportation, flight, home energy, and aggregate calculations
+-   **Sustainability Recommendations**: Personalized advice for transportation, energy, and diet
+-   **Environmental Information Access**: Real-time search and local resource discovery
+-   **MCP Client Integration**: Works with Claude Desktop, Cursor, and other MCP-compatible tools
+
+## OpenAI - ChatGPT App & API Integration
+
+**Category**: OpenAI Integration Track
+**Target**: Best ChatGPT App & Best API Integration
+
+### OpenAI Best Practices Implementation
+
+-   **Well-Scoped Capabilities**: Focused on specific sustainability jobs-to-be-done
+-   **NEW THINGS TO KNOW**: Real-time carbon calculations, environmental data access
+-   **NEW THINGS TO DO**: Sustainability recommendations, unit conversions
+-   **BETTER WAYS TO SHOW**: Structured environmental impact data and metrics
+-   **Immediate Value**: Quick, relevant responses on first interaction
+-   **Privacy by Design**: Minimal required parameters, no unnecessary context
+-   **Ecosystem Ready**: Outputs designed for chaining with other tools
+
+## Multi-Platform Features
+
+### MCP Protocol Implementation
+
+-   `transportation_carbon` - Calculate vehicle emissions
+-   `flight_carbon` - Calculate flight emissions
+-   `home_energy_carbon` - Calculate home energy emissions
+-   `total_carbon` - Aggregate carbon from multiple sources
+-   `suggest_transportation_alternatives` - Recommend green transport
+-   `suggest_energy_efficiency_improvements` - Home energy tips
+-   `suggest_dietary_changes` - Eco diet recommendations
+-   `search_environmental_info` - Environmental search
+-   `get_local_environmental_resources` - Local sustainability resources
+-   `get_latest_environmental_news` - Environmental news
+-   `get_sustainability_practice_info` - Practice details
+-   `convert_units_with_context` - Unit conversions
+
+### OpenAI ChatGPT Integration
+
+-   Function calling for all 13 sustainability tools
+-   Conversational interface for environmental questions
+-   Context-aware recommendations
+-   Real-time carbon footprint calculations
+-   Professional Gradio interface
+
+## Architecture
+
+The EcoAgent platform implements both MCP protocol and OpenAI API integration:
+
+-   **MCP Server**: Full MCP compliance with standardized tool discovery and execution
+-   **OpenAI Integration**: GPT-4o with function calling for sustainability tools
+-   **Multi-Agent System**: Hierarchical agents for different sustainability aspects
+-   **Dual Interface**: MCP server and ChatGPT app from same codebase
+-   **Unified Tools**: Same 13 sustainability tools available via both interfaces
+
+## Requirements
+
+-   Python 3.9+
+-   OpenAI API Key (for ChatGPT integration)
+-   Google API Key (for extended Gemini features)
+-   Gradio with MCP support
+-   [uv](https://github.com/astral-sh/uv) (recommended package manager)
 
 ## Quick Start
 
-### Prerequisites
-
--   Python 3.9+
--   Google Cloud account with access to Gemini API
--   Google Custom Search API key and search engine ID (optional, for search grounding features)
--   Docker (optional, for containerization)
-
 ### Installation
 
-1. **Clone the repository:**
-
 ```bash
+# Clone the repository
 git clone https://github.com/vinhnx/ecoagent.git
 cd ecoagent
-```
 
-2. **Install uv (if not already installed):**
-
-```bash
+# Install uv (if not already installed)
 curl -LsSf https://astral.sh/uv/install.sh | sh
-```
 
-3. **Set up the environment and dependencies:**
-
-```bash
-# Create virtual environment and install dependencies
+# Set up environment and install dependencies
 uv venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 uv pip install -e .
+
+# Configure API keys
+export OPENAI_API_KEY='your-openai-api-key'      # Required for ChatGPT
+export GOOGLE_API_KEY='your-gemini-api-key'      # Optional for advanced features
 ```
 
-4. **Configure API keys:**
+### Running the MCP Server
 
 ```bash
-export GOOGLE_API_KEY='your-gemini-api-key'
+# Run the MCP server
+uv run python -m ecoagent.mcp_server
 ```
 
-### Configuration
+The MCP server will be available at:
 
-Create a `.env` file in the root directory with your configuration:
+-   Web Interface: http://localhost:8000
+-   MCP Endpoint: http://localhost:8000/gradio_api/mcp/sse
+
+### Running the ChatGPT App
+
+```bash
+# Run the ChatGPT app
+uv run python -m chatgpt_app
+```
+
+The ChatGPT app will be available at:
+
+-   Web Interface: http://localhost:7860
+
+## Configuration
+
+Create a `.env` file in the root directory:
 
 ```env
-# Required: Your Gemini API key
+# Required: Your OpenAI API key for ChatGPT integration
+OPENAI_API_KEY=your_openai_api_key
+
+# Optional: Your Google API key for extended features
 GOOGLE_API_KEY=your_api_key_here
 
 # Optional: Other settings
 ECOAGENT_ENVIRONMENT=development
-ECOAGENT_DB_PATH=/path/to/db.sqlite
 LOG_LEVEL=INFO
 
 # Optional: Gemini Google Search grounding (enabled by default)
 ECOAGENT_ENABLE_GOOGLE_SEARCH=true
 ```
 
-Gemini includes built-in Google Search grounding for real-time environmental information—no additional API keys or setup required.
+## Platform Integration
 
-## Running the Application
+### MCP Client Integration
 
-### Development Mode
+Configure MCP clients with the endpoint: `http://localhost:8000/gradio_api/mcp/sse`
 
-```bash
-uv run python -m ecoagent.main
-```
+### OpenAI ChatGPT Integration
 
-### Production Mode
+The ChatGPT app provides a conversational interface with 13 sustainability tools accessible through function calling.
 
-```bash
-# Using Docker
-docker build -t ecoagent .
-docker run -p 8080:8080 -e GOOGLE_API_KEY=$GOOGLE_API_KEY ecoagent
+## Example Use Cases
 
-# Or directly with Python
-python -m ecoagent.main --host 0.0.0.0 --port 8080
-```
+### For MCP-Compatible AI Agents (Claude Desktop, Cursor, etc.)
 
-## CLI Usage
+-   Calculate user carbon footprints during conversations using MCP protocol
+-   Provide personalized sustainability recommendations via standardized tools
+-   Access real-time environmental data through MCP tool calls
 
-The EcoAgent system includes a powerful command-line interface for interacting with the sustainability assistant without needing a web interface.
+### For ChatGPT Integration
 
-### Installation
+-   Natural language queries about sustainability
+-   Conversational carbon footprint analysis
+-   Context-aware environmental recommendations
+-   Real-time tool usage through function calling
 
-After installing the package with `uv pip install -e .`, you can use the CLI directly:
+### For Developers
 
-```bash
-# Get help
-ecoagent --help
+-   Integrate sustainability features via MCP protocol
+-   Use ChatGPT-style interface for direct user interaction
+-   Build sustainability workflows using either approach
 
-# Calculate carbon footprint
-ecoagent carbon --transportation.miles_driven 500 --transportation.vehicle_mpg 25
+## OpenAI Alignment
 
-# Get sustainability recommendations
-ecoagent recommend --profile.diet vegetarian --profile.location urban --goal "reduce-energy-use"
+### Best ChatGPT App
 
-# Track sustainability goals
-ecoagent track --goal "Reduce household energy consumption" --target_value 20.0
+-   [x] ChatGPT-style conversation interface
+-   [x] Professional Gradio user interface
+-   [x] Real-time sustainability assistance
+-   [x] 13 specialized environmental tools
+-   [x] Context-aware recommendations
 
-# Chat with the EcoAgent
-ecoagent chat --user_id myname
-ecoagent chat --message "How can I reduce my carbon footprint?"
-```
+### Best API Integration
 
 ### Available Commands
 
@@ -414,12 +469,30 @@ asyncio.run(main())
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions to enhance the EcoAgent platform! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
 ## License
 
 This project is licensed under the Apache 2.0 License - see [LICENSE](LICENSE) for details.
 
-## Support
+## Acknowledgments
 
-For support, please open an issue in this repository or contact the maintainers.
+-   Built with Google's Agent Development Kit (ADK)
+-   Powered by OpenAI API for ChatGPT integration
+-   Gradio MCP support for seamless protocol integration
+-   MCP Protocol specification compliance
+-   Inspired by the need for sustainable AI practices
+
+[Demo Screenshot](resources/demo.png)
+
+---
+
+**Made with love for the environment**
+
+_EcoAgent - Empowering AI agents and users to make sustainability accessible through MCP and ChatGPT integration_

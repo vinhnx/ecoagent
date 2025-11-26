@@ -1,12 +1,17 @@
-from ecoagent.mcp_server import EcoAgentMCP
+"""
+EcoAgent MCP Server - Hugging Face Space Entry Point
 
-def main():
-    """Main entry point for EcoAgent MCP Server."""
-    mcp_server = EcoAgentMCP()
-    return mcp_server.create_gradio_interface()
+This is the main entry point for the Hugging Face Space deployment.
+It creates the MCP-compliant server with sustainability tools.
+"""
 
-# Create the interface
-demo = main()
+from src.mcp_server.mcp_server import EcoAgentMCP
 
-if __name__ == "__main__":
-    demo.launch(server_name="0.0.0.0", server_port=7860, mcp_server=True)
+# Create the MCP server instance
+mcp_server = EcoAgentMCP()
+
+# Create the Gradio interface with MCP support
+demo = mcp_server.create_gradio_interface()
+
+# The demo object is what Hugging Face Spaces will run
+# When accessed via MCP clients, they will connect to /gradio_api/mcp/sse

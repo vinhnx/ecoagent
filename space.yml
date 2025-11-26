@@ -1,0 +1,14 @@
+title: EcoAgent MCP - Sustainability Assistant as MCP Server
+emoji: 🌱
+colorFrom: green
+colorTo: blue
+sdk: gradio
+pinned: false
+tags:
+- mcp
+- sustainability
+- environmental-impact
+- carbon-footprint
+- building-mcp-track-consumer
+short_description: Gradio-based MCP server for sustainability tools
+license: apache-2.0
