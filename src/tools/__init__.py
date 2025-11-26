@@ -1,0 +1,1 @@
+"""EcoAgent recommendation package initialization."""

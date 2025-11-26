@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoAgent - Carbon Calculator</title>
+    <style>
+        :root {
+            --color-primary: #1e7e34;
+            --color-primary-light: #f0fdf4;
+            --color-secondary: #f59e0b;
+            --color-secondary-light: #fef3c7;
+            --color-text-primary: #0b0b0f;
+            --color-text-secondary: #666666;
+            --color-border: #e5e7eb;
+            --color-success: #16a34a;
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 20px;
+            --spacing-xl: 24px;
+            --border-radius: 8px;
+            --border-radius-lg: 16px;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", sans-serif;
+            --shadow-sm: 0 2px 4px rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 12px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-family);
+            color: var(--color-text-primary);
+            background-color: transparent;
+        }
+
+        body {
+            background: #f6f8fb;
+            padding: var(--spacing-md);
+        }
+
+        main {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        h1, h2 {
+            margin: 0 0 var(--spacing-md) 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            margin-top: var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .header-icon {
+            font-size: 1.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--spacing-lg);
+            color: var(--color-text-secondary);
+        }
+
+        .loading::after {
+            content: "...";
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: "."; }
+            40% { content: ".."; }
+            60%, 100% { content: "..."; }
+        }
+
+        .carbon-display {
+            background: var(--color-primary-light);
+            border: 2px solid #86efac;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .carbon-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--color-success);
+            margin: 0 0 var(--spacing-xs) 0;
+            word-break: break-word;
+        }
+
+        .carbon-unit {
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+            margin-left: var(--spacing-xs);
+        }
+
+        .carbon-context {
+            font-size: 0.95rem;
+            color: var(--color-text-secondary);
+            margin-top: var(--spacing-sm);
+            line-height: 1.4;
+        }
+
+        .carbon-kg {
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            margin-top: var(--spacing-xs);
+            padding-top: var(--spacing-xs);
+            border-top: 1px solid rgba(134, 239, 172, 0.5);
+        }
+
+        .breakdown {
+            margin: var(--spacing-lg) 0;
+        }
+
+        .breakdown-item {
+            background: rgba(30, 126, 52, 0.05);
+            border-left: 4px solid var(--color-primary);
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin: var(--spacing-sm) 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .breakdown-label {
+            font-weight: 500;
+            color: var(--color-primary);
+            flex: 1;
+        }
+
+        .breakdown-value {
+            font-weight: 600;
+            color: var(--color-success);
+            font-size: 0.95rem;
+        }
+
+        .recommendations {
+            margin: var(--spacing-lg) 0;
+        }
+
+        .recommendation {
+            background: var(--color-secondary-light);
+            border-left: 4px solid var(--color-secondary);
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin: var(--spacing-sm) 0;
+            border-radius: 4px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .recommendation-text {
+            font-size: 0.9rem;
+            color: #78350f;
+            line-height: 1.4;
+        }
+
+        .impact-comparison {
+            background: #f3f4f6;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            font-size: 0.875rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        .impact-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-xs) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .impact-item:last-child {
+            border-bottom: none;
+        }
+
+        .error {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            border-left: 4px solid #ef4444;
+            color: #7f1d1d;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin: var(--spacing-md) 0;
+        }
+
+        .error-icon {
+            font-weight: bold;
+            margin-right: var(--spacing-xs);
+        }
+
+        .action-button {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: var(--spacing-sm);
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: #166534;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-button:active {
+            transform: scale(0.98);
+        }
+
+        .footer {
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+            font-size: 0.8rem;
+            color: var(--color-text-secondary);
+            text-align: center;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: var(--color-border);
+            margin: var(--spacing-lg) 0;
+        }
+
+        @media (max-width: 480px) {
+            main {
+                border-radius: 0;
+                padding: var(--spacing-md);
+                max-width: 100%;
+            }
+
+            body {
+                padding: 0;
+                background: #ffffff;
+            }
+
+            .carbon-value {
+                font-size: 2rem;
+            }
+
+            h1, h2 {
+                font-size: 1.1rem;
+            }
+        }
+
+        .content-ready {
+            opacity: 1;
+        }
+
+        .content-loading {
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="header">
+            <span class="header-icon">🌱</span>
+            <h1>Your Carbon Impact</h1>
+        </div>
+        
+        <div id="impact-display" class="content-loading">
+            <div class="loading">Loading your carbon data</div>
+        </div>
+        
+        <div id="breakdown-section" style="display: none;">
+            <div class="section-divider"></div>
+            <h2>📊 Breakdown by Source</h2>
+            <div id="breakdown" class="breakdown"></div>
+        </div>
+
+        <div id="comparison-section" style="display: none;">
+            <div class="section-divider"></div>
+            <h2>🔄 Environmental Context</h2>
+            <div id="comparison" class="impact-comparison"></div>
+        </div>
+        
+        <div id="recommendations-section" style="display: none;">
+            <div class="section-divider"></div>
+            <h2>💡 Recommendations</h2>
+            <div id="recommendations" class="recommendations"></div>
+        </div>
+
+        <div id="error-display" style="display: none;"></div>
+
+        <div class="footer">
+            <p>🌍 EcoAgent - Sustainability Impact Calculator</p>
+        </div>
+    </main>
+
+    <script type="module">
+        // Debug flag
+        const DEBUG = false;
+
+        // Bridge to ChatGPT / OpenAI Apps SDK
+        function getToolOutput() {
+            const output = window.openai?.toolOutput || {};
+            if (DEBUG) console.log('Tool output:', output);
+            return output;
+        }
+
+        function callTool(toolName, args) {
+            if (window.openai?.callTool) {
+                return window.openai.callTool(toolName, args);
+            }
+        }
+
+        // Formatting utilities
+        function formatNumber(num) {
+            if (typeof num !== 'number') return String(num);
+            return Math.round(num * 10) / 10;
+        }
+
+        function formatCarbonValue(pounds) {
+            if (typeof pounds !== 'number') return pounds;
+            return formatNumber(pounds);
+        }
+
+        function calculateKG(pounds) {
+            return formatNumber(pounds * 0.453592);
+        }
+
+        function getEnvironmentContext(carbonPounds) {
+            // Provide contextual comparisons
+            if (carbonPounds < 50) {
+                return "This is equivalent to driving a modern car about 25 miles.";
+            } else if (carbonPounds < 100) {
+                return "This is equivalent to driving a modern car about 50 miles, or one transatlantic flight per person.";
+            } else if (carbonPounds < 500) {
+                return "This is significant - equivalent to several round-trip flights or weeks of driving.";
+            } else if (carbonPounds < 2000) {
+                return "This is substantial - comparable to a quarter of annual per capita emissions in developed countries.";
+            } else {
+                return "This is very high - multiple times higher than typical monthly emissions.";
+            }
+        }
+
+        // Main UI update function
+        function updateUI() {
+            const output = getToolOutput();
+            const displayDiv = document.getElementById('impact-display');
+            const breakdownSection = document.getElementById('breakdown-section');
+            const comparisonSection = document.getElementById('comparison-section');
+            const recommendationsSection = document.getElementById('recommendations-section');
+            const errorDisplay = document.getElementById('error-display');
+
+            // Clear previous content
+            displayDiv.innerHTML = '';
+            document.getElementById('breakdown').innerHTML = '';
+            document.getElementById('comparison').innerHTML = '';
+            document.getElementById('recommendations').innerHTML = '';
+            errorDisplay.innerHTML = '';
+            errorDisplay.style.display = 'none';
+
+            // Check for errors
+            if (output.error || output.isError) {
+                const errorMsg = output.error || output.message || 'Unknown error';
+                errorDisplay.innerHTML = `
+                    <div class="error">
+                        <span class="error-icon">⚠️</span>
+                        <strong>Error:</strong> ${errorMsg}
+                    </div>
+                `;
+                errorDisplay.style.display = 'block';
+                displayDiv.classList.remove('content-loading');
+                displayDiv.classList.add('content-ready');
+                return;
+            }
+
+            // Check if we have carbon data
+            if (!output.carbon_pounds && output.carbon_pounds !== 0) {
+                displayDiv.innerHTML = '<div class="loading">Waiting for carbon data</div>';
+                displayDiv.classList.add('content-loading');
+                return;
+            }
+
+            // Display main carbon value
+            const carbonValue = formatCarbonValue(output.carbon_pounds);
+            const carbonKG = calculateKG(output.carbon_pounds);
+            const description = output.description || 'Carbon footprint calculated';
+
+            displayDiv.innerHTML = `
+                <div class="carbon-display">
+                    <div>
+                        <div class="carbon-value">${carbonValue}<span class="carbon-unit">lbs</span></div>
+                        <div class="carbon-kg">= ${carbonKG} kg CO₂</div>
+                    </div>
+                    <div class="carbon-context">${description}</div>
+                </div>
+            `;
+
+            // Display breakdown if available
+            if (output.breakdown && Object.keys(output.breakdown).length > 0) {
+                let breakdownHTML = '';
+                let hasBreakdown = false;
+
+                for (const [category, value] of Object.entries(output.breakdown)) {
+                    if (typeof value === 'number' && value > 0) {
+                        hasBreakdown = true;
+                        const percentage = (value / output.carbon_pounds * 100).toFixed(0);
+                        breakdownHTML += `
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">${formatCategoryName(category)}</span>
+                                <span class="breakdown-value">${formatNumber(value)} lbs (${percentage}%)</span>
+                            </div>
+                        `;
+                    }
+                }
+
+                if (hasBreakdown) {
+                    document.getElementById('breakdown').innerHTML = breakdownHTML;
+                    breakdownSection.style.display = 'block';
+                }
+            }
+
+            // Display impact comparison
+            const contextText = getEnvironmentContext(output.carbon_pounds);
+            const comparisonHTML = `
+                <div class="impact-item">
+                    <span>🌍 Environmental Context:</span>
+                </div>
+                <div style="padding: var(--spacing-md) 0; line-height: 1.6; color: var(--color-text-primary);">
+                    ${contextText}
+                </div>
+            `;
+            document.getElementById('comparison').innerHTML = comparisonHTML;
+            comparisonSection.style.display = 'block';
+
+            // Display recommendations if available
+            if (output.recommendations && Array.isArray(output.recommendations) && output.recommendations.length > 0) {
+                let recommendationsHTML = '';
+                output.recommendations.forEach((rec, index) => {
+                    const title = typeof rec === 'string' ? rec : (rec.title || rec.suggestion || rec);
+                    const text = rec.description || rec.details || '';
+                    recommendationsHTML += `
+                        <div class="recommendation">
+                            <div class="recommendation-title">💡 Suggestion ${index + 1}</div>
+                            <div class="recommendation-text">${title}${text ? ': ' + text : ''}</div>
+                        </div>
+                    `;
+                });
+                if (recommendationsHTML) {
+                    document.getElementById('recommendations').innerHTML = recommendationsHTML;
+                    recommendationsSection.style.display = 'block';
+                }
+            }
+
+            // Mark as ready
+            displayDiv.classList.remove('content-loading');
+            displayDiv.classList.add('content-ready');
+        }
+
+        function formatCategoryName(name) {
+            return name
+                .replace(/_/g, ' ')
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+
+        // Initialize
+        if (DEBUG) console.log('EcoAgent Widget initialized');
+        
+        // Listen for updates from OpenAI
+        window.addEventListener('openai-tool-output-updated', updateUI);
+        
+        // Also check periodically for updates (for compatibility)
+        setInterval(() => {
+            const output = getToolOutput();
+            if (output.carbon_pounds !== undefined) {
+                updateUI();
+            }
+        }, 500);
+        
+        // Initial render
+        updateUI();
+
+        // Expose some utilities for debugging
+        if (DEBUG) {
+            window.ecoagentDebug = {
+                getToolOutput,
+                updateUI,
+                callTool
+            };
+        }
+    </script>
+</body>
+</html>
